@@ -44,7 +44,7 @@ export class DeviceManager {
     WebSocketManager.getInstance().addClientStatusChangeListener((client, status) => {
       if (status === 'open' && client.type === 'device') {
         // WebSocketManager.getInstance().sendMessage(client, { type: 'hello', data: { server_version: 2 } });
-        WebSocketManager_1.WebSocketManager.getInstance().sendMessage(client, {data:"ok",version:"1.109.0",debug:false,type:"hello"} );
+        WebSocketManager.getInstance().sendMessage(client, {data:"ok",version:"1.109.0",debug:false,type:"hello"} );
       }
     });
 
