@@ -80,7 +80,8 @@ export class WebSocketManager extends EventEmitter {
           ws.isAlive = false;
           ws.ping(() => {});
         });
-      }, 3000);
+      // }, 3000);
+        }, 10000);
     }
   }
 
@@ -123,6 +124,17 @@ export class WebSocketManager extends EventEmitter {
         deviceLogListeners.forEach((listener) => {
           listener(client, message);
         });
+      } else if(message.type === 'hello'){
+           logger.info('WebSocket.Client open ip -> ' + client.ip);
+           clientStatusChangeListeners.forEach((listener) => {
+               listener(client, 'open');
+           });
+      } else if(message.type === 'ping'){
+              client.isAlive = true;
+              client.ping();
+              client.send(JSON.stringify({type:'pong',data:message.data}));
+      } else if(message.type === 'pong'){
+              client.isAlive = true;
       } else {
         clientMessageListeners.forEach((listener) => {
           listener(client, data);
@@ -135,10 +147,10 @@ export class WebSocketManager extends EventEmitter {
       client.isAlive = true;
     });
 
-    logger.info('WebSocket.Client open ip -> ' + client.ip);
-    clientStatusChangeListeners.forEach((listener) => {
-      listener(client, 'open');
-    });
+    // logger.info('WebSocket.Client open ip -> ' + client.ip);
+    // clientStatusChangeListeners.forEach((listener) => {
+    //   listener(client, 'open');
+    // });
   }
 
   public addDeviceLogListener(listener: IDeviceLogListener) {
